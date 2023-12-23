@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Control and Webcam Stream</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            max-width: 800px;
+        }
+
+        .video-feed {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 15px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+
+         /* Specific style for the stop button */
+        #stop {
+        background-color: #dc3545; /* Red color */
+        }
+
+        #stop:hover {
+        background-color: #c82333; /* Slightly darker red on hover */
+    }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        </br>
+        <img class="video-feed" id="video_feed" src="{{ url_for('video_feed') }}" alt="Webcam Feed">
+
+        <h1> Robot Control</h1>
+        <div class="button-grid">
+            <button id="left">Left</button>
+            <button id="forward">Forward</button>
+            <button id="right">Right</button>
+            <button color="red" id="stop">Stop</button>
+            <button id="backward">Backward</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        function sendControl(direction, action) {
+            socket.emit('control', { direction, action });
+        }
+
+        function setupButton(buttonId, direction) {
+            const button = document.getElementById(buttonId);
+
+            button.addEventListener('touchstart', () => {
+                sendControl(direction, 'start');
+            });
+
+            button.addEventListener('touchend', () => {
+                sendControl(direction, 'stop');
+            });
+
+            button.addEventListener('mousedown', () => {
+                sendControl(direction, 'start');
+            });
+
+            button.addEventListener('mouseup', () => {
+                sendControl(direction, 'stop');
+            });
+        }
+
+        setupButton('forward', 'forward');
+        setupButton('backward', 'backward');
+        setupButton('left', 'left');
+        setupButton('right', 'right');
+        setupButton('stop', 'stop');
+    </script>
+</body>
+</html>
+
