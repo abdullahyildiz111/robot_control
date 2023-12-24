@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... Other head elements ... -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+</head>
+<body>
+    <!-- ... Other body elements ... -->
+    <img id="video_feed" src="" alt="Video feed">
+
+    <script>
+        const socket = io.connect('http://' + document.domain + ':' + location.port + '/video');
+
+        socket.on('video_frame', function(data) {
+            const videoFeed = document.getElementById('video_feed');
+            videoFeed.src = data.data;
+        });
+
+        // ... Other script elements ...
+    </script>
+</body>
+</html>
